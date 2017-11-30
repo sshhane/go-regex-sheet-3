@@ -1,9 +1,15 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 )
 
 func main() {
-	fmt.Println("Problem sheet 3")
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Println("Talk to Eliza:")
+	text, _ := reader.ReadString('\n')
+	fmt.Println(text)
+
 } //main
