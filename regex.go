@@ -32,8 +32,20 @@ func ElizaResponse(input string) string {
 		"Your father?  Please tell me more",
 	}
 
-	// capture 'i am'
-	capture := regexp.MustCompile(`(?i)I am ([^.?!]*)[.?!]?`)
+	// List the reflections.
+	reflections := [][]string{
+		{"your", "my"},
+		{"you", "I"},
+		{"me", "you"},
+	}
+
+	// https://gist.github.com/ianmcloughlin/c4c2b8dc586d06943f54b75d9e2250fe
+	// Split the input on word boundaries.
+	boundaries := regexp.MustCompile(`\b`)
+	tokens := boundaries.Split(input, -1)
+
+	// capture "I'm, Im, Iam, I am"
+	capture := regexp.MustCompile(`\bI'?\s*a?m\b([^.?!]*)`)
 
 	myrand := random(0, 3)
 	var output string
@@ -44,12 +56,24 @@ func ElizaResponse(input string) string {
 	} else {
 		if match := capture.MatchString(input); match {
 
-			output = capture.ReplaceAllString(input, "How do you know you are $1?")
+			output = capture.ReplaceAllString(input, "How do you know you are$1?")
 
 		} else {
 			output = responses[myrand]
 		}
 	}
+
+	// Loop through each token, reflecting it if there's a match.
+	for i, token := range tokens {
+		for _, reflection := range reflections {
+			if matched, _ := regexp.MatchString(reflection[0], token); matched {
+				tokens[i] = reflection[1]
+				break
+			}
+		}
+	}
+	// Put the tokens back together.
+	// output = strings.Join(tokens, ``)
 
 	return (output)
 }
