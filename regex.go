@@ -32,6 +32,9 @@ func ElizaResponse(input string) string {
 		"Your father?  Please tell me more",
 	}
 
+	// capture 'i am'
+	capture := regexp.MustCompile(`(?i)I am ([^.?!]*)[.?!]?`)
+
 	myrand := random(0, 3)
 	var output string
 
@@ -39,7 +42,13 @@ func ElizaResponse(input string) string {
 	if father, _ := regexp.MatchString(`(?i).*\bfather\b.*`, input); father {
 		output = fatherResp[myrand]
 	} else {
-		output = responses[myrand]
+		if match := capture.MatchString(input); match {
+
+			output = capture.ReplaceAllString(input, "How do you know you are $1?")
+
+		} else {
+			output = responses[myrand]
+		}
 	}
 
 	return (output)
