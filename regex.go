@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"regexp"
 	"time"
 )
 
@@ -25,9 +26,22 @@ func ElizaResponse(input string) string {
 		"Why do you say that?",
 	}
 
-	myrand := random(0, 3)
+	fatherResp := [3]string{
+		"Why don’t you tell me more about your father?",
+		"Lets talk about your father",
+		"Your father?  Please tell me more",
+	}
 
-	output := responses[myrand]
+	myrand := random(0, 3)
+	var output string
+
+	//check, using a regular expression, if the input contains the word “father”.
+	if father, _ := regexp.MatchString(`(?i).*\bfather\b.*`, input); father {
+		output = fatherResp[myrand]
+	} else {
+		output = responses[myrand]
+	}
+
 	return (output)
 }
 
@@ -36,7 +50,7 @@ func main() {
 
 	fmt.Println("Talk to Eliza:")
 	text, _ := reader.ReadString('\n')
-	fmt.Println(text)
+	// fmt.Println(text)
 
 	fmt.Println(ElizaResponse(text))
 
